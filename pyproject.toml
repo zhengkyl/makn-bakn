@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "makn-bakn"
+version = "0.1.0"
+description = ""
+authors = ["Kyle Zheng <kylezheng73@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.111.0"
+openai = "^1.35.3"
+sqlmodel = "^0.0.19"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+httpx = "^0.27.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
