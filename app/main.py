@@ -1,5 +1,7 @@
-from fastapi import FastAPI
+from typing import List
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from ws import connection_manager
 
 from dotenv import load_dotenv
 
@@ -12,9 +14,10 @@ from auth import router as auth_router
 app = FastAPI(port=8000)
 
 origins = [
-    "*"
-    # "http://localhost",
-    # "http://localhost:8000",
+    # "*"
+    "http://localhost",
+    "http://localhost:8000",
+    "http://localhost:5173",
 ]
 
 app.add_middleware(
@@ -25,10 +28,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/")
 def read_root():
-    return {"greetings":"traveler"}
+    return {"greetings": "traveler"}
 
 app.include_router(users_router, prefix="/users")
 app.include_router(recipes_router, prefix="/recipes")
 app.include_router(auth_router)
+
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await connection_manager.connect(websocket)
+    try:
+        while True:
+            data = await websocket.receive_json()
+    except WebSocketDisconnect:
+        connection_manager.disconnect(websocket)

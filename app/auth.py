@@ -54,14 +54,13 @@ async def auth_google(code: str):
           session.add(new_user)
           session.commit()
     
-    # should redirect immediately, but client side i guess
-# {"access_token": access_token, "id_token": id_token}
-    resp = RedirectResponse("/")
-    resp.set_cookie(key="access_token", value=access_token)
-    resp.set_cookie(key="id", value=id_token)
+    # return {"access_token": access_token, "id_token": id_token}
+    return RedirectResponse(f"{os.environ.get("AFTER_GOOGLE_REDIRECT_URI")}/?access_token={access_token}&id_token={id_token}")
+    # resp.set_cookie(key="access_token", value=access_token)
+    # resp.set_cookie(key="id", value=id_token)
 # headers={"Set-Cookie": f"access_token={access_token}; HttpOnly; Secure",
 #                                           "Set-Cookie": f"id_token={id_token}; HttpOnly; Secure" }
-    return resp
+    # return resp
 
 async def get_current_user(id_token: Annotated[str, Cookie()]):
     payload = base64.b64decode(id_token.split(".")[1] + "==")

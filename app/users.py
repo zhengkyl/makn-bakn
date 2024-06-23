@@ -6,6 +6,7 @@ from sqlmodel import Session, select
 from auth import get_current_user
 from db import engine
 from models import Badge, Meal, User
+from ws import connection_manager
 
 router = APIRouter()
 
@@ -42,6 +43,16 @@ def create_badge(new_badge: NewBadge, user: Annotated[User, Depends(get_current_
         session.add(badge)
         session.commit()
         session.refresh(badge)
+
+        connection_manager.broadcast(
+            {
+                "type": "badge",
+                "name": badge.name,
+                "picture": badge.picture,
+                "user": user.name,
+                "created_at": badge.created_at,
+            }
+        )
         return badge
 
 
@@ -75,6 +86,16 @@ def create_meal(new_meal: NewMeal, user: Annotated[User, Depends(get_current_use
         session.add(meal)
         session.commit()
         session.refresh(meal)
+
+        connection_manager.broadcast(
+            {
+                "type": "meal",
+                "name": meal.name,
+                "picture": meal.picture,
+                "user": user.name,
+                "created_at": meal.created_at,
+            }
+        )
         return meal
 
 
@@ -126,6 +147,5 @@ def read_feed(
             else:
                 feed.append(badges[j])
                 j += 1
-
 
         return feed

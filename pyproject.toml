@@ -13,6 +13,7 @@ sqlmodel = "^0.0.19"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 httpx = "^0.27.0"
 psycopg2-binary = "^2.9.9"
+websockets = "^12.0"
 
 
 [build-system]
