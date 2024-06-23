@@ -18,7 +18,7 @@ fastapi dev
 fastapi run
 ```
 
-## Environment bariables
+## Environment variables
 
 Loaded via `.env` in dev
 
